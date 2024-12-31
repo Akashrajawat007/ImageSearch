@@ -1,13 +1,8 @@
-import { useState } from 'react'
-import './App.css'
+import React from "react";
+import "./index.css";
 
-function App() {
+const App = () => {
+  return <div>Welcome to Unsplash Image Search</div>;
+};
 
-  return (
-    <>
-      App
-    </>
-  )
-}
-
-export default App
+export default App;
