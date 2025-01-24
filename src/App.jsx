@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./index.css";
 import { Form } from "react-bootstrap";
 import axios from "axios";
 
 const App = () => {
   const searchInput = useRef("");
+  const [images, setImages] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,6 +31,8 @@ const App = () => {
           }`
         );
         console.log("Data: ", data);
+        setImages(data.results);
+        setTotalPages(data.total_pages);
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -53,6 +57,13 @@ const App = () => {
         <div onClick={() => handleSelection("birds")}>Birds</div>
         <div onClick={() => handleSelection("cats")}>Cats</div>
         <div onClick={() => handleSelection("dogs")}>Dogs</div>
+      </div>
+      <div className="images">
+        {images.map((image) => {
+          return (
+            <img key={image.id} src={image.urls.small} alt={image.alt_description} className="image"/>
+          )
+        })}
       </div>
     </div>
   );
