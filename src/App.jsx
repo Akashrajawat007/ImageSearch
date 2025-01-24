@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./index.css";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import axios from "axios";
 
 const App = () => {
   const searchInput = useRef("");
   const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
   const handleSearch = (e) => {
@@ -26,7 +27,7 @@ const App = () => {
       const text = searchInput.current.value;
       if (text.length > 0) {
         const { data } = await axios.get(
-          `${API_URL}?query=${text}&page=1&per_page=${IMAGES_PER_PAGE}&client_id=${
+          `${API_URL}?query=${text}&page=${page}&per_page=${IMAGES_PER_PAGE}&client_id=${
             import.meta.env.VITE_API_KEY
           }`
         );
@@ -38,6 +39,10 @@ const App = () => {
       console.error("Error: ", error);
     }
   };
+
+  useEffect(() => {
+    fetchImages();
+  }, [page]);
 
   return (
     <div className="container">
@@ -61,9 +66,22 @@ const App = () => {
       <div className="images">
         {images.map((image) => {
           return (
-            <img key={image.id} src={image.urls.small} alt={image.alt_description} className="image"/>
-          )
+            <img
+              key={image.id}
+              src={image.urls.small}
+              alt={image.alt_description}
+              className="image"
+            />
+          );
         })}
+      </div>
+      <div className="buttons">
+        {page > 1 && (
+          <Button onClick={() => setPage((prev) => prev - 1)}>Previous</Button>
+        )}
+        {page < totalPages && (
+          <Button onClick={() => setPage((prev) => prev + 1)}>Next</Button>
+        )}
       </div>
     </div>
   );
